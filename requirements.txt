@@ -1,0 +1,8 @@
+flask 
+python-telegram-bot
+requests
+gunicorn
+chatterbot
+chatterbot_corpus
+SpeechRecognition
+ftransc
