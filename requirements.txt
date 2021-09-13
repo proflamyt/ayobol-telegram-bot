@@ -2,6 +2,6 @@ flask
 python-telegram-bot
 requests
 gunicorn
-chatterbot
+chatterbot==1.0.4
 chatterbot_corpus
 SpeechRecognition
