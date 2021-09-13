@@ -2,6 +2,7 @@ import re
 import telegram
 from telegram.ext.filters import Filters
 import speech_recognition as sr
+import ftransc.core as fr
 from flask import Flask, request, session , copy_current_request_context
 from telebot.credentials import bot_token, bot_user_name,URL
 from flask_socketio import SocketIO, emit, disconnect
@@ -110,7 +111,7 @@ def respond():
 
         voice = bot.getFile(update.message.voice.file_id)
     
-        voice.download('file.wav')
+        fr.transcode(voice.download('file.ogg'), 'wav')
         r = sr.Recognizer()
 
         with sr.WavFile('file.wav') as source :
