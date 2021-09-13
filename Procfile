@@ -1,1 +1,1 @@
-web: gunicorn app:ayobol
+web: gunicorn app:app
