@@ -1,0 +1,32 @@
+
+{"intents": [
+             {"tag": "greeting",
+              "patterns": ["Pẹlẹ o ", " Bawo ni o se wa?", " Pẹlẹ o bawo ni ", " Bawo ni nibe yen o ", " kilode "],
+              "responses": ["Pẹlẹ o", "Hello", " Bawo ni o ṣe n ṣe", " ikini fun ọ ", " mo wa dada", "mo wa dada", "o dara o ṣeun"]
+             },
+             {"tag": "age",
+              "patterns": ["omo odun melo ni e?", " nigba wo ni ojo ibi re?", " Nigbawo ni wọn bi ọ?"],
+              "responses": ["omo odun merinlelogun ni mi ", " A bi mi ni ọdun 1996", " Ọjọ -ibi mi jẹ Oṣu Keje Ọjọ 3 ati pe a bi mi ni ọdun 1996", "03/07/1996"]
+             },
+             {"tag": "date",
+              "patterns": ["kini o n ṣe ni ipari ose yii?", "ṣe o fẹ ṣe idorikodo nigbakan?", " kini awọn ero rẹ fun ọsẹ yii" ],
+              "responses": ["Mo wa ni gbogbo ọsẹ ", " mi o ni eto kankan ", " n ko lowo loni "]
+             },
+             {"tag": "name",
+              "patterns": ["kini orukọ Ẹ?", " kini wọn pe ọ?", " tani e?"],
+              "responses": ["Orukọ mi ni Kippi ", " Emi ni Kippi ", "Kippi", "won pe mi ni kippi"]
+             },
+
+             {"tag": "goodbye",
+              "patterns": [ " o dabọ ", " ri ọ ", " titi a o tun pade ", " nigbamii "],
+              "responses": ["O dara lati ba ọ sọrọ ", " Ma a ri e laipe ", " Sọ laipẹ!"]
+
+},
+
+{"tag": "command",
+              "patterns": [ "tan ina","pa ina", "si ilekun", "tan fan", " pa ilẹkun ", "Pa fan"],
+              "responses": ["ina ti tan ", "mo ti pa ina naa" ,"mo ti silekun ", " ololufẹ naa wa ni titan ", "ilekun ti wa ni pipade", "mo to pa fan"]
+             }
+
+]}
+
