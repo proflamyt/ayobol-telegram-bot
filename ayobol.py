@@ -1,9 +1,7 @@
 import re
 import telegram
-from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler
 from telegram.ext.filters import Filters
 import speech_recognition as sr
-import ftransc.core as fr
 from flask import Flask, request, session , copy_current_request_context
 from telebot.credentials import bot_token, bot_user_name,URL
 from flask_socketio import SocketIO, emit, disconnect
@@ -17,12 +15,19 @@ bot = telegram.Bot(token=TOKEN)
 
 async_mode= None
 
+
+
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socket_ = SocketIO(app, async_mode=async_mode)
+thread = None
+thread_lock = Lock()
 my_bot  = ChatBot(
 'Ayobol',
 storage_adapter='chatterbot.storage.SQLStorageAdapter',
 logic_adapters=[
 'chatterbot.logic.MathematicalEvaluation',
-'chatterbot.logic.TimeLogicAdapter',
 'chatterbot.logic.BestMatch'
 ],
 database_uri='sqlite:///database.sqlite3'
@@ -65,13 +70,6 @@ for item in (small_talk, commands1,commands2, age, goodbye):
 
 
 
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socket_ = SocketIO(app, async_mode=async_mode)
-thread = None
-thread_lock = Lock()
-
 def ai(msg):
     res = my_bot.get_response(msg)
     
@@ -112,7 +110,7 @@ def respond():
 
         voice = bot.getFile(update.message.voice.file_id)
     
-        fr.transcode(voice.download('file.ogg'), 'wav')
+        voice.download('file.wav')
         r = sr.Recognizer()
 
         with sr.WavFile('file.wav') as source :
