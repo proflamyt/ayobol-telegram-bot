@@ -15,7 +15,6 @@ TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
 async_mode= None
-'''
 
 my_bot  = ChatBot(
 'Ayobol',
@@ -62,7 +61,6 @@ list_trainer = ListTrainer(my_bot)
 for item in (small_talk, commands1,commands2, age, goodbye):
     list_trainer.train(item)
 
-'''
 
 def ai(msg):
     res = my_bot.get_response(msg)
