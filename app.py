@@ -15,7 +15,7 @@ TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
 async_mode= None
-
+'''
 
 my_bot  = ChatBot(
 'Ayobol',
@@ -62,7 +62,7 @@ list_trainer = ListTrainer(my_bot)
 for item in (small_talk, commands1,commands2, age, goodbye):
     list_trainer.train(item)
 
-
+'''
 
 def ai(msg):
     res = my_bot.get_response(msg)
@@ -184,10 +184,6 @@ def disconnect_request():
     emit('my_response',
          {'data': 'Disconnected!', 'count': session['receive_count']},
          callback=can_disconnect)
-
-if __name__ == '__main__':
-    app.run(app, debug=True)
-
 
 
 
