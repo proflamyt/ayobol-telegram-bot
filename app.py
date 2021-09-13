@@ -16,15 +16,15 @@ bot = telegram.Bot(token=TOKEN)
 
 async_mode= None
 
-my_bot  = ChatBot(
-'Ayobol',
-storage_adapter='chatterbot.storage.SQLStorageAdapter',
-logic_adapters=[
-'chatterbot.logic.MathematicalEvaluation',
-'chatterbot.logic.BestMatch'
-],
-database_uri='sqlite:///database.sqlite3'
-)
+# my_bot  = ChatBot(
+# 'Ayobol',
+# storage_adapter='chatterbot.storage.SQLStorageAdapter',
+# logic_adapters=[
+# 'chatterbot.logic.MathematicalEvaluation',
+# 'chatterbot.logic.BestMatch'
+# ],
+# database_uri='sqlite:///database.sqlite3'
+# )
 
 small_talk = ['bawo ni?',
     'enle o!',
