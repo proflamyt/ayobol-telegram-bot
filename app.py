@@ -23,7 +23,7 @@ my_bot  = ChatBot(
     'chatterbot.logic.MathematicalEvaluation',
     'chatterbot.logic.BestMatch'
     ],
-    database_uri='sqlite:///db.sqlite3'
+    database_uri=None,
 )
 
 small_talk = ['bawo ni?',
