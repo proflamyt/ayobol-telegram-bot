@@ -131,10 +131,10 @@ def respond():
             command = ola['command']
             if command > 0:
                 emit('my_response', {'data': command })
-            update.message.reply_text(ola['response'])
+            update.message.reply_text(ola['response'].text)
         except Exception:
     
-            update.message.reply_text(ola['response'])
+            update.message.reply_text(ola['response'].text)
 
     return 'ok'
 
