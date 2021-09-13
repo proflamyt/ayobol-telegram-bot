@@ -127,6 +127,7 @@ def respond():
             # clear shitty texts for ai
             text = re.sub(r"\W", "_", text) 
             ola  = ai(text)
+            print(ola)
             command = ola['command']
             if command > 0:
                 emit('my_response', {'data': command })
