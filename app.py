@@ -101,39 +101,40 @@ def respond():
         update.message.reply_text(f'Hello {update.effective_user.first_name}'+ bot_welcome)
         #bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
 
-    elif Filters.voice :
-        duration = update.message.voice.duration
-        print('transcribe_voice.Message duration '+ duration)
+#     elif Filters.voice :
+#         duration = update.message.voice.duration
+#         print('transcribe_voice.Message duration '+ duration)
 
-        #fetch the voice from message
+#         #fetch the voice from message
 
-        voice = bot.getFile(update.message.voice.file_id)
+#         voice = bot.getFile(update.message.voice.file_id)
     
-        #fr.transcode(voice.download('file.ogg'), 'wav')
-        r = sr.Recognizer()
+#         #fr.transcode(voice.download('file.ogg'), 'wav')
+#         r = sr.Recognizer()
 
-        with sr.WavFile('file.wav') as source :
-            audio = r.record(source)
+#         with sr.WavFile('file.wav') as source :
+#             audio = r.record(source)
 
-            try: 
-                txt = r.recognize_google(audio) 
-                #txt =  my_bot.get_response(txt)
-            except sr.UnknownValueError as e:
-                print(f'Speech to Text Service could not generate request {e}')
+#             try: 
+#                 txt = r.recognize_google(audio) 
+#                 #txt =  my_bot.get_response(txt)
+#             except sr.UnknownValueError as e:
+#                 print(f'Speech to Text Service could not generate request {e}')
             
-            update.message.reply_text(txt)
+#             update.message.reply_text(txt)
     else:
         try:
             # clear shitty texts for ai
             text = re.sub(r"\W", "_", text) 
             ola  = ai(text)
+            print(ola)
             command = ola['command']
             if command > 0:
                 emit('my_response', {'data': command })
-            update.message.reply_text(ola['response'])
+            update.message.reply_text(ola['response'].text)
         except Exception:
     
-            bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
+            update.message.reply_text(ola['response'].text)
 
     return 'ok'
 
