@@ -96,9 +96,9 @@ def respond():
    # the first time you chat with the bot AKA the welcoming message
     if text == "/start":
         # print the welcoming message
-        bot_welcome = f'Chatbot ayobol niyi,{update.effective_user.first_name}'
+        bot_welcome = f'Pele o , oruko mini {bot_user_name},'
         # send the welcoming message
-        update.message.reply_text(f'Hello {update.effective_user.first_name}'+ bot_welcome)
+        update.message.reply_text(f'kabo {update.effective_user.first_name}'+ bot_welcome)
         #bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
 
 #     elif Filters.voice :
