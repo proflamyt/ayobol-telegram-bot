@@ -5,12 +5,18 @@ import speech_recognition as sr
 #import ftransc.core as fr
 from flask import Flask, request, session , copy_current_request_context
 from telebot.credentials import bot_token, bot_user_name,URL
-from flask_socketio import SocketIO, emit, disconnect
+#from flask_socketio import SocketIO, emit, disconnect
 from threading import Lock
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
+import asyncio
+from websockets import serve
+
+
 global bot
 global TOKEN
+
+
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
@@ -66,23 +72,20 @@ def ai(msg):
     res = my_bot.get_response(msg)
     
     if 'ino' in msg:
-        return {'response': res, 'command' :1}
+        return {'response': res, 'command' :{'state':1, 'component':1}}
     if 'fan' in msg:
-        return {'response': res, 'command' :2}
+        return {'response': res, 'command' :{'state':1, 'component':2}}
     if 'ilekun' in msg:
-        return {'response': res, 'command' :3}
+        return {'response': res, 'command' : {'state':1, 'component':3}}
 
-    return {'response': res, 'command' : 0}
+    return {'response': res, 'command' : {'state':1, 'component':0}}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socket_ = SocketIO(app, async_mode=async_mode)
-thread = None
-thread_lock = Lock()
-
 
 @app.route(f'/{TOKEN}', methods=['POST'])
 def respond():
+    global sender
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
@@ -99,38 +102,40 @@ def respond():
         bot_welcome = f'Pele o , oruko mini {bot_user_name},'
         # send the welcoming message
         update.message.reply_text(f'kabo {update.effective_user.first_name}'+ bot_welcome)
-        #bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
 
-#     elif Filters.voice :
-#         duration = update.message.voice.duration
-#         print('transcribe_voice.Message duration '+ duration)
+    elif update.message.voice :
+        duration = update.message.voice.duration
+        print('transcribe_voice.Message duration '+ duration)
 
-#         #fetch the voice from message
+        #fetch the voice from message
 
-#         voice = bot.getFile(update.message.voice.file_id)
-    
-#         #fr.transcode(voice.download('file.ogg'), 'wav')
-#         r = sr.Recognizer()
+        voice = bot.getFile(update.message.voice.file_id)
+        voice.download('file.wav')
+        #fr.transcode(voice.download('file.ogg'), 'wav')
+        r = sr.Recognizer()
 
-#         with sr.WavFile('file.wav') as source :
-#             audio = r.record(source)
+        with sr.WavFile('file.wav') as source :
+            audio = r.record(source)
 
-#             try: 
-#                 txt = r.recognize_google(audio) 
-#                 #txt =  my_bot.get_response(txt)
-#             except sr.UnknownValueError as e:
-#                 print(f'Speech to Text Service could not generate request {e}')
+            try: 
+                txt = r.recognize_google(audio) 
+                #txt =  my_bot.get_response(txt)
+            except sr.UnknownValueError as e:
+                print(f'Speech to Text Service could not generate request {e}')
             
-#             update.message.reply_text(txt)
+            update.message.reply_text(txt)
     else:
         try:
             # clear shitty texts for ai
             text = re.sub(r"\W", "_", text) 
             ola  = ai(text)
-            print(ola)
-            command = ola['command']
+           # print(ola)
+            command = ola['command']['component']
             if command > 0:
-                emit('my_response', {'data': command })
+                #send message
+                sender = ola
+                
             update.message.reply_text(ola['response'].text)
         except Exception:
     
@@ -158,36 +163,23 @@ def index():
 
 
 
-@socket_.on('my_event', namespace='/test')
-def test_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
+async def echo(websocket, path):
+    while True:
+        await websocket.send(sender)
+        await asyncio.sleep(1)
 
 
-@socket_.on('my_broadcast_event', namespace='/test')
-def test_broadcast_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']},
-         broadcast=True)
 
+        #broadcast message to telegram
+     #   async for message in websocket:
 
-@socket_.on('disconnect_request', namespace='/test')
-def disconnect_request():
-    @copy_current_request_context
-    def can_disconnect():
-        disconnect()
+       #     await websocket.send()
 
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'Disconnected!', 'count': session['receive_count']},
-         callback=can_disconnect)
+async def main():
+    async with serve(echo, URL, 8765, ping_interval=None):
+        await asyncio.Future()
 
 
 
 
-
-
-
-
+asyncio.run(main())
