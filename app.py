@@ -11,7 +11,8 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import asyncio
 from websockets import serve
-
+import signal
+import os
 
 global bot
 global TOKEN
@@ -183,10 +184,12 @@ async def echo(websocket, path):
        #     await websocket.send()
 
 async def main():
-    async with serve(echo, URL, 8765, ping_interval=None):
-        await asyncio.Future()
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+    async with serve(echo, host='', port=int(os.environ["PORT"]), ping_interval=None):
+        await stop
 
 
 
 
-asyncio.run(main())
