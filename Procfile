@@ -1,1 +1,1 @@
-web: python app.py
+web: gunicorn -k gevent wsgi:app
