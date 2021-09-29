@@ -71,14 +71,20 @@ for item in (small_talk, commands1,commands2, age, goodbye):
 def ai(msg):
     res = my_bot.get_response(msg)
     
-    if 'ino' in msg:
-        return {'response': res, 'command' :{'state':1, 'component':1}}
-    if 'fan' in msg:
-        return {'response': res, 'command' :{'state':1, 'component':2}}
-    if 'ilekun' in msg:
-        return {'response': res, 'command' : {'state':1, 'component':3}}
+    if 'pa ino' in msg:
+        return {'response': res, 'command' :"{'state':false, 'component':25}"}
+    elif 'tan ino' in msg:
+        return {'response': res, 'command' :"{'state':true, 'component':25}"}
+    elif 'pa fan' in msg:
+        return {'response': res, 'command' :"{'state':false, 'component':26}"}
+    elif 'tan fan' in msg:
+        return {'response': res, 'command' :"{'state':true, 'component':26}"}
+    elif 'pa ilekun' in msg:
+        return {'response': res, 'command' : "{'state':false, 'component':27}"}
+    elif 'si ilekun' in msg:
+        return {'response': res, 'command' : "{'state':true, 'component':27}"}
 
-    return {'response': res, 'command' : {'state':1, 'component':0}}
+    return {'response': res, 'command' : 0}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -131,10 +137,10 @@ def respond():
             text = re.sub(r"\W", "_", text) 
             ola  = ai(text)
            # print(ola)
-            command = ola['command']['component']
-            if command > 0:
+            command = ola['command']
+            if command != 0:
                 #send message
-                sender = ola
+                sender = ola['command']
                 
             update.message.reply_text(ola['response'].text)
         except Exception:
@@ -165,6 +171,7 @@ def index():
 
 async def echo(websocket, path):
     while True:
+        #can only emit string
         await websocket.send(sender)
         await asyncio.sleep(1)
 
