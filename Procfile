@@ -1,1 +1,1 @@
-web: gunicorn -k gevent wsgi:app
+web: gunicorn wsgi:app
