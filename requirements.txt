@@ -8,3 +8,4 @@ SpeechRecognition
 pyyaml==5.1.1
 flask-socketio
 websockets
+gevent
