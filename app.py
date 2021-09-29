@@ -93,6 +93,7 @@ app.config['SECRET_KEY'] = 'secret!'
 @app.route(f'/{TOKEN}', methods=['POST'])
 def respond():
     global sender
+    sender ='ok'
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
