@@ -10,7 +10,8 @@ from threading import Lock
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import asyncio
-from websockets import serve
+#from websockets import serve
+import websockets
 import signal
 import os
 
