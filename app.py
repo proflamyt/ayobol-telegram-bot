@@ -196,6 +196,3 @@ async def main():
         await stop
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-    asyncio.run(main())
