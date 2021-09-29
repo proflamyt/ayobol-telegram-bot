@@ -177,20 +177,22 @@ async def echo(websocket, path):
         await websocket.send(sender)
         await asyncio.sleep(1)
 
-
-
         #broadcast message to telegram
      #   async for message in websocket:
 
        #     await websocket.send()
 
 async def main():
+    # Set the stop condition when receiving SIGTERM.
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
-    async with serve(echo, host='', port=int(os.environ["PORT"]), ping_interval=None):
+
+    async with websockets.serve(
+        echo,
+        host="",
+        port=int(os.environ["PORT"]),
+    ):
         await stop
-
-
 
 
