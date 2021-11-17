@@ -1,17 +1,30 @@
+"""Simple demo of using Flask with aiohttp via aiohttp-wsgi's
+WSGIHandler.
+"""
+
+import asyncio
+from aiohttp import web
+from aiohttp_wsgi import WSGIHandler
+from flask import Flask, render_template
 import re
 import telegram
 from telegram.ext.filters import Filters
 import speech_recognition as sr
 #import ftransc.core as fr
-from flask import Flask, request, session , copy_current_request_context
+from flask import Flask, request
 from telebot.credentials import bot_token, bot_user_name,URL
-#from flask_socketio import SocketIO, emit, disconnect
-from threading import Lock
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
-import asyncio
+#import asyncio
 #from websockets import serve
-import websockets
+
+
+
+app = Flask('aioflask')
+app.config['DEBUG'] = True
+app.jinja_loader.searchpath.insert(0, '.')
+
+
 import signal
 import os
 
@@ -22,11 +35,11 @@ global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
-async_mode= None
+
 
 my_bot  = ChatBot(
     'Ayobol',
-    storage_adapter='chatterbot.storage.SQLStorageAdapter',
+   # storage_adapter='chatterbot.storage.SQLStorageAdapter',
     logic_adapters=[
     'chatterbot.logic.MathematicalEvaluation',
     'chatterbot.logic.BestMatch'
@@ -88,8 +101,7 @@ def ai(msg):
 
     return {'response': res, 'command' : 0}
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+
 
 @app.route(f'/{TOKEN}', methods=['POST'])
 def respond():
@@ -164,37 +176,32 @@ def set_webhook():
    if s:
        return "webhook setup ok"
    else:
-       
        return "webhook setup failed"
 
 @app.route('/')
 def index():
-   return '.'
+    return render_template('index.html')
 
 
 
-async def echo(websocket, path):
-    while True:
-        #can only emit string
-        await websocket.send(sender)
-        await asyncio.sleep(1)
-
-        #broadcast message to telegram
-     #   async for message in websocket:
-
-       #     await websocket.send()
-
-async def main():
-    # Set the stop condition when receiving SIGTERM.
-    loop = asyncio.get_running_loop()
-    stop = loop.create_future()
-    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
-
-    async with websockets.serve(
-        echo,
-        host="",
-        port=int(os.environ["PORT"]),
-    ):
-        await stop
 
 
+
+async def socket(request):
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+
+    try:
+        ws.send_str(str(sender))
+    except:
+        pass
+    await asyncio.sleep(1)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    aio_app = web.Application()
+    wsgi = WSGIHandler(app)
+    aio_app.router.add_route('*', '/{path_info: *}', wsgi.handle_request)
+    aio_app.router.add_route('GET', '/socket', socket)
+    web.run_app(aio_app, port=5555)
